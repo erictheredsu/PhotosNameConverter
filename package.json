@@ -1,0 +1,15 @@
+{
+  "name": "foldernameconvert",
+  "version": "1.0.0",
+  "description": "convert folders' name which  mac photo generated",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node node_modules/mocha/bin/mocha"
+  },
+  "devDependencies": {
+    "mocha": "^8.0.1"
+  },
+  "author": "Eric",
+  "license": "ISC"
+}
