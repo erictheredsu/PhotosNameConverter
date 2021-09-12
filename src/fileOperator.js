@@ -31,7 +31,7 @@ module.exports = function () {
                 }
                 let oldSubPath = pathLib.join(path,dirent.name); 
                 let newSubPath = pathLib.join(path,newName);             
-                let subDir = await fspromise.rename(oldSubPath,newSubPath);
+                await fspromise.rename(oldSubPath,newSubPath);
             }
           } catch (err) {
             console.error(err);
@@ -40,10 +40,10 @@ module.exports = function () {
 
     this.createFolders = async (path, array) =>{
         try {
-                array.forEach((elem) =>{
-                    let subPath = pathLib.join(path, elem);
-                    fspromise.mkdir(subPath);
-                });
+              array.forEach((elem) =>{
+                  let subPath = pathLib.join(path, elem);
+                  fspromise.mkdir(subPath);
+              });
           } catch (err) {
             console.error(err);
           }
@@ -55,11 +55,35 @@ module.exports = function () {
                 let subPath = pathLib.join(path, elem);
                 fspromise.rmdir(subPath);
             });
-      } catch (err) {
+        } catch (err) {
         console.error(err);
+        return false;
       }
+      return true;
     };
 
-    
+    this.renameFilesInFolder = async(rootPath, parentFolder) =>{
+      try {
+          let subFolderPath = pathLib.join(rootPath, parentFolder);
+          let subFiles = await this.getFolderList(subFolderPath);
+          let sequence = 1;
+          subFiles.forEach(async (elem)=>{
+              try {
+                let oldFilePath = pathLib.join(subFolderPath, elem);
+                let info = pathLib.parse(oldFilePath);
+                let newName = parentFolder + '_' + sequence + info.ext;
+                sequence++;
+                let newPath = pathLib.join(subFolderPath,newName );
+                return await fspromise.rename(oldFilePath,newPath);
+              } catch (error) {
+                console.error(err);
+              }
+          });
+        } catch (err) {
+          console.error(err);
+          return false
+      }
+      return true;
+    }
 
 };

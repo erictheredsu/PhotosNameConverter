@@ -8,6 +8,11 @@ console.log(path);
 async function main(){
     let app = new fileOperator();
     await app.renameFolders(path);
+
+    const res = await app.getFolderList(path);
+    await res.forEach(async (elem) =>{
+        await app.renameFilesInFolder(path, elem);
+    })
 }
 
 main();
